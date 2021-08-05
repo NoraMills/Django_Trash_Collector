@@ -1,7 +1,8 @@
 from django.http import HttpResponse, request
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Customer
+from .forms import customer_forms, change_pickup_form
 # Create your views here.
 
 # TODO: Create a function for each path created in customers/urls.py. Each will need a template as well.
@@ -40,3 +41,34 @@ def create(request):
         return render(request, 'customers/index.html', context={'customer': customer})
     else:
         return render(request, 'customers/create.html')
+
+
+def customer_account(request):
+    user = request.user
+    customer = Customer.objects.get(user_id=user.id)
+    form = customer_forms(request.POST, instance=customer)
+    if form.is_valid():
+        form.save()
+        return redirect('/customers/')
+    context = {
+        'form': form,
+        'customer': customer
+    }
+    return render(request, "customers/account_info.html", context)
+
+
+def change_pickup(request):
+    user = request.user
+    customer = Customer.objects.filter(user_id=user.id).first()
+    if customer is None:
+        return redirect("/customers/customer")
+    customer_info = Customer.objects.get(user_id=user.id)
+    form = change_pickup_form(request.POST, instance=customer)
+    if form.is_valid():
+        form.save()
+        return redirect('/customers/')
+    context = {
+        'form': form,
+        'customer': customer
+    }
+    return render(request, "customers/change_pickup.html", context)

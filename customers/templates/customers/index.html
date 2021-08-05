@@ -9,8 +9,8 @@ the same. #}
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
-    <h1>Hello {{ user.username }}!</h1>
-    <h2>Your current pick up date is: {{ logged_in_customer.reg_pickup }} </h2>
+  <h1>Hello {{ user.username }}!</h1>
+  <h2>Your current pick up date is: {{ logged_in_customer.reg_pickup }} </h2>
 </div>
 
 {% else %}
