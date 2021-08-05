@@ -62,7 +62,6 @@ def change_pickup(request):
     customer = Customer.objects.filter(user_id=user.id).first()
     if customer is None:
         return redirect("/customers/customer")
-    customer_info = Customer.objects.get(user_id=user.id)
     form = change_pickup_form(request.POST, instance=customer)
     if form.is_valid():
         form.save()

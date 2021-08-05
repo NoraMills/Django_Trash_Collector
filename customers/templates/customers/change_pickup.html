@@ -7,23 +7,27 @@ the same. #}
 {% block header %} Change Pickup Day {% endblock %}
 
 {% block content %}
-<form action="{%url 'customers:change_pickup' %}" method="POST">
-    {% csrf_token %}
-    <table class="table table-hover">
-        <tr>
-            <th scope="col">Name</th>
-            <td scope="row"><input class="form-control" type="text" name="name" Value="{{customer.name}}" readonly></td>
-        </tr>
-        <tr>
-            <th scope="col">Weekly Pickup Day</th>
-            <td scope="row"><input class="form-control" type="text" name="reg_pickup" Value="{{customer.reg_pickup}}">
-            </td>
-        </tr>
-        <tr>
-            <th scope="col">Single Pickup Date</th>
-            <td scope="row"><input class="form-control" type="date" name="onetime_pickup"></td>
-        </tr>
-    </table>
-    <input class="form-control" type="submit" value="Submit">
-</form>
+<div class="container">
+    <form action="{%url 'customers:change_pickup' %}" method="POST">
+        {% csrf_token %}
+        <table class="table table-hover">
+            <tr>
+                <th class="col">Name</th>
+                <td class="row"><input class="form-control" type="text" name="name" Value="{{customer.name}}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <th class="col">Weekly Pickup Day</th>
+                <td class="row"><input class="form-control" type="text" name="reg_pickup"
+                        Value="{{customer.reg_pickup}}">
+                </td>
+            </tr>
+            <tr>
+                <th class="col">Single Pickup Date</th>
+                <td class="row"><input class="form-control" type="date" name="onetime_pickup"></td>
+            </tr>
+        </table>
+        <input class="form-control" type="submit" value="Submit">
+    </form>
+</div>
 {% endblock %}
