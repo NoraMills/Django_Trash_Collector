@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}{% block header%} Create Customer {% endblock %}{% endblock %}
+
+{% block content %}
+<div class="container col-6">
+    <form method="POST" action="{% url 'customers:create' %}">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon2">Full Name</span>
+            <input type="text" class="form-control" placeholder="name" aria-label="name" name="name" id="name">
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon2">5 digit Zipcode</span>
+            <input type="text" class="form-control" placeholder="zipcode" aria-label="zip_code" name="zip_code"
+                id="zip_code">
+
+        </div>
+
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="reg_pickup">Regular Pickup Day</label>
+            <select class="form-select" name="reg_pickup" id="reg_pickup">
+                <option selected>Choose...</option>
+                <option value="Mon">Monday</option>
+                <option value="Tue">Tuesday</option>
+                <option value="Wed">Wednesday</option>
+                <option value="Thu">Thursday</option>
+                <option value="Fri">Friday</option>
+            </select>
+        </div>
+        <div class="input-group mb-3">
+            <input type="submit" value="Submit Info" class="btn btn-primary">
+        </div>
+    </form>
+</div>
+
+{% endblock %}
