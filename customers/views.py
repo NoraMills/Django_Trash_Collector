@@ -43,7 +43,7 @@ def create(request):
         return render(request, 'customers/create.html')
 
 
-def customer_account(request):
+def account_info(request):
     user = request.user
     customer = Customer.objects.get(user_id=user.id)
     form = customer_forms(request.POST, instance=customer)
