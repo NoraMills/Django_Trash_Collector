@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}{% block header%} Create Customer {% endblock %}{% endblock %}
+{% block title %} Create Customer {% endblock %}
+{% block header%} <center>Create Customer</center> {% endblock %}
 
 {% block content %}
+{% if user.is_authenticated %}
 <div class="container col-6">
     <form method="POST" action="{% url 'customers:create' %}">
         {% csrf_token %}
@@ -34,5 +36,14 @@
         </div>
     </form>
 </div>
+{% else %}
+<center>
+    <p>You are not logged in. Please log in or create an account.</p>
+    <a href="{% url 'login' %}" class="btn btn-primary" role="button">Log In</a>
+    <a href="{% url 'accounts:register' %}" class="btn btn-secondary" role="button">Sign Up</a>
+</center>
+{% endif %}
+
+
 
 {% endblock %}

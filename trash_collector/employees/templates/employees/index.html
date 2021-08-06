@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %} Employee Home {% endblock %}
+{% block header %} {% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h1>Hello {{ user.username }}!</h1>
+
+<div class="container">
+  <h3>Pickups in your area</h3>
+  <ul class="list-group">
+    {% for customer in Customers %}
+    {% if customer.zip_code == logged_in_employee.zipcode and customer.reg_pickup == today and customer.suspension == False %}
+    <li class="list-group-item">
+      {{ customer.name}}
+    </li>
+    {%endif%}
+    {% if customer.zip_code == logged_in_employee.zipcode and customer.onetime_pickup == date%}
+    <li class="list-group-item">
+      {{ customer.name}}
+    </li>
+    {%endif%}    
+    {%endfor%}
+  </ul>
+</div>
+
+{% else %}
+<p>You are at the employee index, but you are not logged in.</p>
+<a href="{% url 'login' %}">Log In</a>
+<a href="{% url 'accounts:register' %}">Sign Up</a>
+{% endif %}
+{% endblock %}

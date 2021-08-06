@@ -1,8 +1,7 @@
 from django.http import HttpResponse, request
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from .models import Customer
-from .forms import customer_forms, change_pickup_form
 # Create your views here.
 
 # TODO: Create a function for each path created in customers/urls.py. Each will need a template as well.
@@ -21,7 +20,6 @@ def index(request):
 
     # It will be necessary while creating a Customer/Employee to assign request.user as the user foreign key
 
-    print(user)
     return render(request, 'customers/index.html', context={"logged_in_customer": logged_in_customer})
 
 
@@ -43,31 +41,46 @@ def create(request):
         return render(request, 'customers/create.html')
 
 
+def change_pickup(request):
+    if request.method == "POST":
+        user = request.user
+        customer = Customer.objects.get(user=user)
+        reg_pickup = request.POST.get('reg_pickup')
+        customer.reg_pickup = reg_pickup
+        customer.save()
+        return redirect('/customers/')
+    else:
+        return render(request, 'customers/change_pickup.html')
+
+
 def account_info(request):
     user = request.user
-    customer = Customer.objects.get(user_id=user.id)
-    form = customer_forms(request.POST, instance=customer)
-    if form.is_valid():
-        form.save()
-        return redirect('/customers/')
-    context = {
-        'form': form,
-        'customer': customer
-    }
-    return render(request, "customers/account_info.html", context)
+    customer = Customer.objects.get(user=user)
+    return render(request, 'customers/account_info.html', context={'customer': customer})
 
 
-def change_pickup(request):
-    user = request.user
-    customer = Customer.objects.get(user_id=user.id)
-    if customer is None:
-        return redirect("/customers/customer")
-    form = change_pickup_form(request.POST, instance=customer)
-    if form.is_valid():
-        form.save()
+def suspend_account(request):
+    if request.method == "POST":
+        user = request.user
+        customer = Customer.objects.get(user=user)
+        sus_start = request.POST.get('sus_start')
+        sus_end = request.POST.get('sus_end')
+        customer.suspension = True
+        customer.sus_start = sus_start
+        customer.sus_end = sus_end
+        customer.save()
         return redirect('/customers/')
-    context = {
-        'form': form,
-        'customer': customer
-    }
-    return render(request, "customers/change_pickup.html", context)
+    else:
+        return render(request, 'customers/suspend_account.html')
+
+
+def onetime_pickup(request):
+    if request.method == "POST":
+        user = request.user
+        customer = Customer.objects.get(user=user)
+        one_time_pickup = request.POST.get('onetime_pickup')
+        customer.one_time_pickup = one_time_pickup
+        customer.save()
+        return redirect('/customers/')
+    else:
+        return render(request, 'customers/onetime_pickup.html')

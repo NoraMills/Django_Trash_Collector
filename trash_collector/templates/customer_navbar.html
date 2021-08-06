@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Employee</a>
+        <a class="navbar-brand">Customer</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -8,10 +8,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'customers:index' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" href="{% url 'customers:change_pickup' %}">Change Pickup</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:suspend_account' %}">Suspend Account</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:onetime_pickup' %}">1-Time Pickup</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:account_info' %}">Account Info</a>
                 </li>
             </ul>
             <a class="nav-link" href="{% url 'logout' %}">Log Out</a>

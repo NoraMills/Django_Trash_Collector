@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %} Create Employee {% endblock %}
+{% block header%} <center>Create Employee</center> {% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container col-6">
+    <form method="POST" action="{% url 'employees:create' %}">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon2">Full Name</span>
+            <input type="text" class="form-control" placeholder="name" aria-label="name" name="name" id="name">
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon2">5 digit Zipcode</span>
+            <input type="text" class="form-control" placeholder="zipcode" aria-label="zipcode" name="zipcode"
+                id="zipcode">
+        </div>
+
+        <div class="input-group mb-3">
+            <input type="submit" value="Submit Info" class="btn btn-primary">
+        </div>
+    </form>
+</div>
+{% else %}
+<center>
+    <p>You are not logged in. Please log in or create an account.</p>
+    <a href="{% url 'login' %}" class="btn btn-primary" role="button">Log In</a>
+    <a href="{% url 'accounts:register' %}" class="btn btn-secondary" role="button">Sign Up</a>
+</center>
+{% endif %}
+
+
+
+{% endblock %}

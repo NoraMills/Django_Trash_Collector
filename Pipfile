@@ -4,8 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-mysql-connector-python = "*"
 django = "*"
+mysql-connector-python = "*"
 
 [dev-packages]
 
