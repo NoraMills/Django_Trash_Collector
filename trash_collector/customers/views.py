@@ -1,86 +1,134 @@
-from django.http import HttpResponse, request
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from .models import Customer
-# Create your views here.
-
-# TODO: Create a function for each path created in customers/urls.py. Each will need a template as well.
+from django.shortcuts import render
+from .models import Customer, Special_pickups
 
 
 def index(request):
-    # The following line will get the logged-in in user (if there is one) within any view function
     user = request.user
+    context = {
+        'user': user
+    }
 
     try:
-        # This line inside the 'try' will return the customer record of the logged-in user if one exists
         logged_in_customer = Customer.objects.get(user=user)
+        context['logged_in_customer'] = logged_in_customer
     except:
-        # TODO: Redirect the user to a 'create' function to finish the registration process if no customer record found
-        return render(request, 'customers/create.html')
+        return create(request)
 
-    # It will be necessary while creating a Customer/Employee to assign request.user as the user foreign key
-
-    return render(request, 'customers/index.html', context={"logged_in_customer": logged_in_customer})
+    return render(request, 'customers/index.html', context)
 
 
 def create(request):
-    if request.method == 'POST':
+    if request.method == "POST":
+        name = request.POST.get("name")
         user = request.user
-        name = request.POST.get('name')
-        zip_code = request.POST.get('zip_code')
-        reg_pickup = request.POST.get('reg_pickup')
-        customer = Customer()
-        customer.user = user
-        customer.name = name
-        customer.zip_code = zip_code
-        customer.reg_pickup = reg_pickup
-        customer.balance = 10
-        customer.save()
-        return render(request, 'customers/index.html', context={'customer': customer})
+        zipcode = request.POST.get("zipcode")
+        pickup_day = request.POST.get("pickup_day")
+        address = request.POST.get("address")
+        suspend_start = request.POST.get('suspend_start')
+        suspend_end = request.POST.get('suspend_end')
+        balance = 0
+        if zipcode == 5:
+            new_customer = Customer(name=name, user=user, zipcode=zipcode, pickup_day=pickup_day,
+                                    address=address, suspend_start=suspend_start, suspend_end=suspend_end, balance=balance)
+            new_customer.save()
+            return index(request)
+        else:
+            return render(request, 'customers/create.html')
     else:
         return render(request, 'customers/create.html')
 
 
-def change_pickup(request):
-    if request.method == "POST":
-        user = request.user
-        customer = Customer.objects.get(user=user)
-        reg_pickup = request.POST.get('reg_pickup')
-        customer.reg_pickup = reg_pickup
-        customer.save()
-        return redirect('/customers/')
-    else:
-        return render(request, 'customers/change_pickup.html')
-
-
-def account_info(request):
+def suspension(request):
     user = request.user
-    customer = Customer.objects.get(user=user)
-    return render(request, 'customers/account_info.html', context={'customer': customer})
+    context = {
+        'user': user
+    }
+    logged_in_customer = Customer.objects.get(user=user)
+    context['logged_in_customer'] = logged_in_customer
 
-
-def suspend_account(request):
     if request.method == "POST":
-        user = request.user
-        customer = Customer.objects.get(user=user)
-        sus_start = request.POST.get('sus_start')
-        sus_end = request.POST.get('sus_end')
-        customer.suspension = True
-        customer.sus_start = sus_start
-        customer.sus_end = sus_end
-        customer.save()
-        return redirect('/customers/')
+        suspend_start = request.POST.get("suspend_start")
+        suspend_end = request.POST.get("suspend_end")
+        if suspend_start and suspend_end:
+            if suspend_end < suspend_start:
+                temp = suspend_end
+                suspend_end = suspend_start
+                suspend_start = temp
+
+            logged_in_customer.suspend_start = suspend_start
+            logged_in_customer.suspend_end = suspend_end
+            logged_in_customer.save()
+            return my_account(request)
+        else:
+            return render(request, 'customers/suspension.html')
     else:
-        return render(request, 'customers/suspend_account.html')
+        return render(request, 'customers/suspension.html')
 
 
-def onetime_pickup(request):
+def pickup_day(request):
+    user = request.user
+    context = {
+        'user': user
+    }
+
+    logged_in_customer = Customer.objects.get(user=user)
+    context['logged_in_customer'] = logged_in_customer
+
     if request.method == "POST":
-        user = request.user
-        customer = Customer.objects.get(user=user)
-        one_time_pickup = request.POST.get('onetime_pickup')
-        customer.one_time_pickup = one_time_pickup
-        customer.save()
-        return redirect('/customers/')
+        pickup_day = request.POST.get("pickup_day")
+
+        if pickup_day:
+            logged_in_customer.pickup_day = pickup_day
+            logged_in_customer.save()
+
+        return my_account(request)
+
     else:
-        return render(request, 'customers/onetime_pickup.html')
+        return render(request, 'customers/pickup_day.html')
+
+
+def my_account(request):
+    user = request.user
+    context = {
+        'user': user
+    }
+
+    logged_in_customer = Customer.objects.get(user=user)
+    context['logged_in_customer'] = logged_in_customer
+
+    all_special_dates = get_all_special_pickup_dates(request)
+    context['all_special_dates'] = all_special_dates
+
+    return render(request, 'customers/my_account.html', context)
+
+
+def special_pickup_date(request):
+    user = request.user
+    context = {
+        'user': user
+    }
+
+    logged_in_customer = Customer.objects.get(user=user)
+    context['logged_in_customer'] = logged_in_customer
+
+    if request.method == "POST":
+        special_pickup_date = request.POST.get("special_pickup_date")
+        customer = logged_in_customer
+
+        if special_pickup_date:
+            new_special_pickup = Special_pickups(
+                special_pickup_date=special_pickup_date, customer=customer)
+            new_special_pickup.save()
+
+        return my_account(request)
+
+    else:
+        return render(request, 'customers/specialpickupdate.html')
+
+
+def get_all_special_pickup_dates(request):
+    all_special_dates = Special_pickups.objects.all()
+
+    return all_special_dates

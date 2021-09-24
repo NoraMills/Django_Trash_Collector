@@ -2,17 +2,17 @@
 
 {% block title %} Register Account {% endblock %}
 
-{% block header %} <center>Register Account</center> {% endblock %}
+{% block header %} Register Account {% endblock %}
 
 {% block content %}
-<center>
-  <h2>Sign up</h2>
-</center>
-<form method="post" class="col-lg-6 offset-lg-3">
-  <div class="row justify-content-center">
-    {% csrf_token %}
-    {{ form.as_p }}
+  <div class="container-fluid m-3">
+    <h2>Sign up</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <a href="{% url 'home' %}"  class="btn btn-primary text-uppercase">Back</a>
+      <button class="btn btn-primary text-uppercase" type="submit">Sign Up</button>
+    
+    </form>
   </div>
-  <center><button type="submit" class="btn btn-primary">Sign Up</button></center>
-</form>
 {% endblock %}

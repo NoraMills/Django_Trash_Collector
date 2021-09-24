@@ -7,6 +7,6 @@ from django.db import models
 
 class Employee(models.Model):
     name = models.CharField(max_length=50)
-    user = models.ForeignKey('accounts.User', default=0,
-                             on_delete=models.CASCADE)
     zipcode = models.CharField(max_length=5)
+    user = models.ForeignKey('accounts.User', blank=True,
+                             null=True, on_delete=models.CASCADE)

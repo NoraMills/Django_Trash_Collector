@@ -1,33 +1,37 @@
 {% extends 'base.html' %}
 
 {% block title %} Employee Home {% endblock %}
-{% block header %} {% endblock %}
+
+{% block header %} Hello {{ current_employee.name }}! {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-<h1>Hello {{ user.username }}!</h1>
+  {% if user.is_authenticated %}
 
-<div class="container">
-  <h3>Pickups in your area</h3>
-  <ul class="list-group">
-    {% for customer in Customers %}
-    {% if customer.zip_code == logged_in_employee.zipcode and customer.reg_pickup == today and customer.suspension == False %}
-    <li class="list-group-item">
-      {{ customer.name}}
-    </li>
-    {%endif%}
-    {% if customer.zip_code == logged_in_employee.zipcode and customer.onetime_pickup == date%}
-    <li class="list-group-item">
-      {{ customer.name}}
-    </li>
-    {%endif%}    
-    {%endfor%}
-  </ul>
-</div>
+    <h3 class="col-sm-6 mb-4  p-2 text-center">Today's Customers: </h3>
+        
+    <ul class="list-group list-group-flush mb-4">
+        {% for customer in todays_customers %}
+        <li class="list-group-item col-sm-6 p-3 bg-info border border-light fw-bold text-dark">
+          {{customer.name}} <br> 
+          {{customer.address}}, {{customer.zipcode}}
+        </li>
+        {% endfor %}
+    </ul>
+    <button type="button" class="col-sm-6 btn btn-dark mb-2">
+      <a class="text-light text-uppercase text-decoration-none" href="{% url 'employees:register_pickup' %}">Register New Pickups</a>
+    </button>
 
-{% else %}
-<p>You are at the employee index, but you are not logged in.</p>
-<a href="{% url 'login' %}">Log In</a>
-<a href="{% url 'accounts:register' %}">Sign Up</a>
-{% endif %}
+    <br>
+
+    <button type="button" class="col-sm-6 btn btn-dark mb-4">
+      <a class="text-light text-uppercase text-decoration-none" href="{% url 'employees:search_completed_pickups' %}">Search Completed Pickups</a>
+    </button>
+
+  
+
+  {% else %}
+    <p>You are at the employee index, but you are not logged in.</p>
+    <a href="{% url 'login' %}">Log In</a>
+    <a href="{% url 'accounts:register' %}">Sign Up</a>
+  {% endif %}
 {% endblock %}

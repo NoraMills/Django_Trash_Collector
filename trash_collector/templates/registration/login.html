@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
 
-{% block title %} Login {% endblock %}
+{% block title %} Trash Login Page {% endblock %}
 
-{% block header %} <center>Log in</center> {% endblock %}
+{% block header %} Trash {% endblock %}
 
-{% block content %}
-<center>
-  <br />
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Log In</button>
-  </form>
-  {% endblock %}
-</center>
+
+  {% block content %}
+
+  <div class="container-fluid m-3">
+    <p class="fw-bold">Please enter your login credentials.</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <a href="{% url 'home' %}"  class="btn btn-primary text-uppercase">Back</a>
+      <button class="btn btn-primary text-uppercase" type="submit">Log In</button>
+    </form>
+  </div>
+{% endblock %}
+</div>
